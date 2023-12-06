@@ -15,7 +15,7 @@ total_delay = 0
 packet_number = 0
 
 # read data
-with open('send.txt', 'rb') as f:
+with open('file.mp3', 'rb') as f:
     data = f.read()
  
 # create a udp socket
