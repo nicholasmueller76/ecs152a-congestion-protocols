@@ -48,7 +48,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
                 
                 # extract ack id
                 ack_id = int.from_bytes(ack[:SEQ_ID_SIZE], byteorder='big')
-                # print(ack_id, ack[SEQ_ID_SIZE:])
+                print(ack_id, ack[SEQ_ID_SIZE:])
                 
                 # ack id == next sequence id, move on
                 if ack_id == seq_id + MESSAGE_SIZE:
