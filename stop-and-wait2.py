@@ -97,5 +97,5 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
     avg_delay = total_delay/packet_number
 
     print("Average Per-Packet Delay: ", avg_delay, " seconds")
-    print("Throughput: ", throughput, " bits/second")
+    print("Throughput: ", throughput, " bytes/second")
     print("Throughput / Avg. Delay Metric: ", throughput/avg_delay)
