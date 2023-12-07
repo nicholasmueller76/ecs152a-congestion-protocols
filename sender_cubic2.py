@@ -137,10 +137,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
         # window_offset, window_offset + MESSAGE_SIZE, window_offset + 2*MESSAGE_SIZE ..., ack_id - MESSAGE_SIZE
         # print("Cumulative ack: ", window_offset, ack_id)
         for seq_id in range(window_offset, ack_id, MESSAGE_SIZE):
-            packets_in_window[seq_id][1] = True
-            recvtimes[seq_id] = currentTime
-            delta = recvtimes[seq_id] - send_times[seq_id]
-            rtt_total += delta.total_seconds()
+            if(recvtimes.get(seq_id) == None):
+                packets_in_window[seq_id][1] = True
+                recvtimes[seq_id] = datetime.now()
+                delta = recvtimes[seq_id] - send_times[seq_id]
+                rtt_total += delta.total_seconds()
         window_offset = ack_id
 
     # Set the size of the congestion window. This automatically
@@ -285,7 +286,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
 
     for seq_id, sendtime in send_times.items():
         delta = recvtimes[seq_id] - sendtime
-        print(f"{seq_id}: {sendtime} - {recvtimes[seq_id]} = {delta.total_seconds()}")
+        # print(f"{seq_id}: {sendtime} - {recvtimes[seq_id]} = {delta.total_seconds()}")
         total_delay += delta.total_seconds()
 
     delta = all_acks_recvtime - socket_opened_time
