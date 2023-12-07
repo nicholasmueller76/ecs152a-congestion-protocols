@@ -137,12 +137,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
         global ssThresh
         global ඞ
         global packet_num
-        global rtt_total
 
         TMP_DEBUG_cWindowSize = cWindowSize
-
-        rtt_avg = rtt_total / packet_num
-        ඞ = 1/(rtt_avg)
 
         if cWindowSize < ssThresh:
             # slow start
@@ -177,7 +173,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
 
         ssThresh = max(cWindowSize / 2, 1)
 
-        rtt_avg = rtt_total / packet_num
+        rtt_avg = rtt_total / max(packet_num, 1)
 
         if(rtt_avg == 0): ඞ = 0
         else: ඞ = 1/(10 * rtt_avg)
