@@ -165,12 +165,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
             K = math.pow((wmax * (1-BETA))/C, 1/3)
             cWindowSize = C * math.pow(time_since_reduction - K, 3) + wmax
             cWindowSize += ඞ
-            cWindowSize = max(int(cWindowSize), 1)
-            print("time since reduction:", time_since_reduction)
-            print("K:", K)
-            print("wmax:", wmax)
-            print("ඞ", ඞ)
-            print("cwindow:", cWindowSize)
+            cWindowSize = max(round(cWindowSize), 1)
+            # print("time since reduction:", time_since_reduction)
+            # print("K:", K)
+            # print("wmax:", wmax)
+            # print("ඞ", ඞ)
+            # print("cwindow:", cWindowSize)
 
 
 
@@ -209,9 +209,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
 
         reduction_time = datetime.now()
 
-        rtt_avg = rtt_total / packet_num
+        rtt_avg = rtt_total / max(packet_num, 1)
 
-        ඞ = 1/(10 * rtt_avg)
+        if(rtt_avg == 0): ඞ = 0
+        else: ඞ = 1/(10 * rtt_avg)
 
         rtt_total = 0
         packet_num = 0
