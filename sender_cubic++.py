@@ -94,7 +94,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
         global packets_in_window
         # add packets that are in the window but not in the dictionary
 
-        # print(f"window size : {cWindowSize}")
+        print(f"window size : {cWindowSize}")
 
         for i in range(int(cWindowSize)):
             if window_offset + i * MESSAGE_SIZE >= len(data):
@@ -122,7 +122,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
             # send packet
             udp_socket.sendto(message, ('localhost', 5001))
             packet_num += 1
-            # print("Sending message with seq_id: ", seq_id)
+            print("Sending message with seq_id: ", seq_id)
                     
     # cumuliative acknowldgement: acknowledge all packets < ack_id
     def cuml_ack(ack_id):
