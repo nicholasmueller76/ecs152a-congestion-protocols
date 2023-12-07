@@ -205,10 +205,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
         wmax = cWindowSize
 
         reduction_time = datetime.now()
+        
+        rtt_avg = rtt_total / max(packet_num, 1)
 
-        rtt_avg = rtt_total / packet_num
-
-        ඞ = 1/(10 * rtt_avg)
+        if(rtt_avg == 0): ඞ = 0
+        else: ඞ = 1/(10 * rtt_avg)
 
         rtt_total = 0
         packet_num = 0
