@@ -296,9 +296,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
 
     all_acks_recvtime = datetime.now()
 
-    for seq_id, sendtime in send_times.items():
+    print(len(recvtimes))
+
+    for seq_id, i_sendtime in send_times.items():
         # print(f"{seq_id},{sendtime}, {recvtimes[seq_id]}")
-        delta = recvtimes[seq_id] - sendtime
+        delta = recvtimes[seq_id] - i_sendtime
         total_delay += delta.total_seconds()
 
     delta = all_acks_recvtime - socket_opened_time
@@ -306,6 +308,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
 
     packet_number = (len(data) + MESSAGE_SIZE - 1) / MESSAGE_SIZE
     avg_delay = total_delay/packet_number
+
+    print(packet_number)
 
     # print("Average Per-Packet Delay: ", avg_delay, " seconds")
     # print("Throughput: ", throughput, " bytes/second")
