@@ -164,6 +164,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
             K = ((wmax * (1-BETA))/C) ** (1/3)
             cWindowSize = C * ((time_since_reduction - K) ** (3)) + wmax
             cWindowSize += ඞ
+            cWindowSize = max(int(cWindowSize), 1)
 
         print(f"windowChange: {TMP_DEBUG_cWindowSize} -> {cWindowSize}")
         
