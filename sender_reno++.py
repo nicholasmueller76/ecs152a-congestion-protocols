@@ -147,7 +147,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
             # congestion avoid
             cWindowSize += round(ඞ)
 
-        print(f"windowChange: {TMP_DEBUG_cWindowSize} -> {cWindowSize}")
+        # print(f"windowChange: {TMP_DEBUG_cWindowSize} -> {cWindowSize}")
         
         # commented implementation involving states.
         # global state
@@ -164,7 +164,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
     # Essentially the same as TCP Tahoe, but use this for the congestion_control()
     # function instead.
     def control_congestion(context):
-        print("Congestion control called with context: ", context)
+        # print("Congestion control called with context: ", context)
         global cWindowSize
         global ssThresh
         global ඞ
@@ -175,8 +175,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
 
         rtt_avg = rtt_total / max(packet_num, 1)
 
-        if(rtt_avg == 0): ඞ = 0
-        else: ඞ = 1/(5 * rtt_avg)
+        if(rtt_avg == 0): ඞ = 1
+        else: ඞ = 1/(10 * rtt_avg)
 
         rtt_total = 0
         packet_num = 0
