@@ -195,7 +195,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
 
         reduction_time = datetime.now()
 
-        rtt_avg = rtt_total / packet_num
+        rtt_avg = rtt_total / max(packet_num, 1)
 
         if(rtt_avg == 0): ඞ = 0
         else: ඞ = 1/(10 * rtt_avg)
