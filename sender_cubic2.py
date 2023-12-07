@@ -286,7 +286,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
 
     for seq_id, sendtime in send_times.items():
         delta = recvtimes[seq_id] - sendtime
-        # print(f"{seq_id}: {sendtime} - {recvtimes[seq_id]} = {delta.total_seconds()}")
+        print(f"{seq_id}: {sendtime} - {recvtimes[seq_id]} = {delta.total_seconds()}")
         total_delay += delta.total_seconds()
 
     delta = all_acks_recvtime - socket_opened_time
