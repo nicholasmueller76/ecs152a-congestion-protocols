@@ -166,6 +166,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
             cWindowSize = C * math.pow(time_since_reduction - K, 3) + wmax
             cWindowSize += ඞ
             cWindowSize = max(int(cWindowSize), 1)
+            print("time since reduction:", time_since_reduction)
+            print("K:", K)
+            print("wmax:", wmax)
+            print("ඞ", ඞ)
+            print("cwindow:", cWindowSize)
+
+
 
         # print(f"windowChange: {TMP_DEBUG_cWindowSize} -> {cWindowSize}")
         
@@ -207,7 +214,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
         ඞ = 1/(10 * rtt_avg)
 
         rtt_total = 0
-        packet_number = 0
+        packet_num = 0
 
         if context == "double_dup":
             cWindowSize = ssThresh
