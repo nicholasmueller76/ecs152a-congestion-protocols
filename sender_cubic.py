@@ -133,11 +133,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
         # window_offset, window_offset + MESSAGE_SIZE, window_offset + 2*MESSAGE_SIZE ..., ack_id - MESSAGE_SIZE
         # print("Cumulative ack: ", window_offset, ack_id)
         for seq_id in range(window_offset, ack_id, MESSAGE_SIZE):
-            if(recvtimes.get(seq_id) == None):
-                packets_in_window[seq_id][1] = True
-                recvtimes[seq_id] = datetime.now()
-                delta = recvtimes[seq_id] - send_times[seq_id]
-                rtt_total += delta.total_seconds()
+            packets_in_window[seq_id][1] = True
+            recvtimes[seq_id] = datetime.now()
+            delta = recvtimes[seq_id] - send_times[seq_id]
+            rtt_total += delta.total_seconds()
         window_offset = ack_id
 
     # Set the size of the congestion window. This automatically
@@ -165,14 +164,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
             K = math.pow((wmax * (1-BETA))/C, 1/3)
             cWindowSize = C * math.pow(time_since_reduction - K, 3) + wmax
             cWindowSize += ඞ
-            cWindowSize = max(round(cWindowSize), 1)
-            # print("time since reduction:", time_since_reduction)
-            # print("K:", K)
-            # print("wmax:", wmax)
-            # print("ඞ", ඞ)
-            # print("cwindow:", cWindowSize)
-
-
+            cWindowSize = max(int(cWindowSize), 1)
 
         # print(f"windowChange: {TMP_DEBUG_cWindowSize} -> {cWindowSize}")
         
@@ -209,13 +201,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
 
         reduction_time = datetime.now()
 
-        rtt_avg = rtt_total / max(packet_num, 1)
+        rtt_avg = rtt_total / packet_num
 
-        if(rtt_avg == 0): ඞ = 0
-        else: ඞ = 1/(10 * rtt_avg)
+        ඞ = 1/(10 * rtt_avg)
 
         rtt_total = 0
-        packet_num = 0
+        packet_number = 0
 
         if context == "double_dup":
             cWindowSize = ssThresh
