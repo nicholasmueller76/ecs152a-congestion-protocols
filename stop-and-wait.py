@@ -50,7 +50,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
                 
                 # extract ack id
                 ack_id = int.from_bytes(ack[:SEQ_ID_SIZE], byteorder='big')
-                print(ack_id, ack[SEQ_ID_SIZE:])
+                # print(ack_id, ack[SEQ_ID_SIZE:])
                 
                 # ack id == next sequence id, move on
                 if ack_id == seq_id + data_length:
@@ -65,6 +65,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
         # move sequence id forward
         seq_id += data_length
 
+
+    data_length = len(data[seq_id : seq_id + MESSAGE_SIZE])
+
+    packet_number += 1
+    sendtime = datetime.now()
+
     # send empty final closing message
     udp_socket.sendto(int.to_bytes(seq_id, SEQ_ID_SIZE, signed=True, byteorder='big'), ('localhost', 5001))
     
@@ -75,7 +81,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
                 
                 # extract ack id
                 ack_id = int.from_bytes(ack[:SEQ_ID_SIZE], byteorder='big')
-                print(ack_id, ack[SEQ_ID_SIZE:])
+                # print(ack_id, ack[SEQ_ID_SIZE:])
                 
                 # ack id == next sequence id, move on
                 if ack_id == seq_id:
