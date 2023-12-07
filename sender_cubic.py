@@ -111,16 +111,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
         global packets_in_window
         global packet_num
         global send_times
-
-        now = datetime.now()
-
         for seq_id, [message, acked] in packets_in_window.items():
             if acked:
                 # ignore acknowledged packets
                 continue
             # if sending packet for the first time, record the time
             if send_times.get(seq_id) == None:
-                send_times[seq_id] = now
+                send_times[seq_id] = datetime.now()
             # send packet
             udp_socket.sendto(message, ('localhost', 5001))
             packet_num += 1
@@ -133,14 +130,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
         global rtt_total
         global recvtimes
         global send_times
-        
-        now = datetime.now()
         # window_offset, window_offset + MESSAGE_SIZE, window_offset + 2*MESSAGE_SIZE ..., ack_id - MESSAGE_SIZE
         # print("Cumulative ack: ", window_offset, ack_id)
         for seq_id in range(window_offset, ack_id, MESSAGE_SIZE):
             if(recvtimes.get(seq_id) == None):
                 packets_in_window[seq_id][1] = True
-                recvtimes[seq_id] = now
+                recvtimes[seq_id] = datetime.now()
                 delta = recvtimes[seq_id] - send_times[seq_id]
                 rtt_total += delta.total_seconds()
         window_offset = ack_id
@@ -206,14 +201,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
         wmax = cWindowSize
 
         reduction_time = datetime.now()
-        
-        rtt_avg = rtt_total / max(packet_num, 1)
 
-        if(rtt_avg == 0): ඞ = 0
-        else: ඞ = 1/(10 * rtt_avg)
+        rtt_avg = rtt_total / packet_num
+
+        ඞ = 1/(10 * rtt_avg)
 
         rtt_total = 0
-        packet_num = 0
+        packet_number = 0
 
         if context == "double_dup":
             cWindowSize = ssThresh
@@ -297,11 +291,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
 
     all_acks_recvtime = datetime.now()
 
-    # print(len(recvtimes))
-
-    for seq_id, i_sendtime in send_times.items():
-        # print(f"{seq_id},{sendtime}, {recvtimes[seq_id]}")
-        delta = recvtimes[seq_id] - i_sendtime
+    for seq_id, sendtime in send_times.items():
+        print(f"{seq_id},{sendtime}, {recvtimes[seq_id]}")
+        delta = recvtimes[seq_id] - sendtime
         total_delay += delta.total_seconds()
 
     delta = all_acks_recvtime - socket_opened_time
@@ -309,8 +301,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
 
     packet_number = (len(data) + MESSAGE_SIZE - 1) / MESSAGE_SIZE
     avg_delay = total_delay/packet_number
-
-    # print(packet_number)
 
     # print("Average Per-Packet Delay: ", avg_delay, " seconds")
     # print("Throughput: ", throughput, " bytes/second")
